@@ -1,7 +1,7 @@
 from datetime import datetime
-from dateutil.parser import parse
-
 from operator import itemgetter
+
+from dateutil.parser import parse
 
 
 def or_na(item):
@@ -11,7 +11,7 @@ def or_na(item):
     :return:
     """
     if not item:
-        return 'N/A'
+        return 'n/a'
     return item
 
 
@@ -33,26 +33,31 @@ def reverse(s: list):
     return s[::-1]
 
 
-def pretty_date(date, fmt="%d %B %Y %I:%M:%S %p"):
+def pretty_date(date, fmt=None):
     """
 
     :param date:
     :param fmt:
     :return:
     """
+    fmt = fmt or "%d %B %Y %I:%M:%S %p"
+
     if date:
         if isinstance(date, datetime):
             return date.strftime(fmt)
+
         return parse(date).strftime(fmt)
     return None
 
 
-def order_by(data: list, item, reverse=False):
+# noinspection PyShadowingNames
+def order_by(data, item, reverse=False, silent=True):
     """
 
-    :param data:
-    :param item:
-    :param reverse:
+    :param data: list of objects
+    :param item: item of the object according to which to order
+    :param reverse: reverse order
+    :param silent: raise or not exception
     :return:
     """
     try:
@@ -62,14 +67,19 @@ def order_by(data: list, item, reverse=False):
             reverse=reverse
         )
     except KeyError:
-        return data
+        if silent:
+            return data
+        else:
+            raise
 
 
-def truncate(data: str, n):
+def truncate(data, n, terminator=None):
     """
 
-    :param data:
-    :param n:
+    :param data: input string
+    :param n: max length of string
+    :param terminator: string to append to output
     :return:
     """
-    return ' '.join(data.split()[:n])
+    term = terminator or '...'
+    return "{}{}".format(data[:n], term)

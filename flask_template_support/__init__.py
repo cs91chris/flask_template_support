@@ -1,12 +1,6 @@
-from .filters import or_na
-from .filters import reverse
-from .filters import order_by
-from .filters import truncate
-from .filters import yes_or_no
-from .filters import pretty_date
-
+from .version import *
 from .functions import now
-
+from .filters import or_na, reverse, order_by, truncate, yes_or_no, pretty_date
 
 DEFAULT_FILTERS = (
     (or_na, None),
