@@ -40,7 +40,7 @@ Example usage
 	    (test_sub, 'sub'),
 	))
 
-Run ``test.py`` in example folder and go to http://127.0.0.1:5000/ to see if it works
+Run ``test.py`` in example folder and go to http://127.0.0.1:5000/ to see how it works
 
 
 License MIT
