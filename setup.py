@@ -4,29 +4,82 @@ Flask-TemplateSupport
 
 Template support for flask application
 """
-from setuptools import setup
+import os
+import re
+import sys
 
-from flask_template_support import author, __version__
+from setuptools.command.test import test
+from setuptools import setup, find_packages
 
-with open("README.rst", "r") as fh:
-    long_description = fh.read()
+BASE_PATH = os.path.dirname(__file__)
+VERSION_FILE = os.path.join('flask_template_support', 'version.py')
+
+
+def read(file):
+    """
+
+    :param file:
+    :return:
+    """
+    with open(os.path.join(BASE_PATH, file)) as f:
+        return f.read()
+
+
+def grep(file, name):
+    """
+
+    :param file:
+    :param name:
+    :return:
+    """
+    pattern = r"{attr}\W*=\W*'([^']+)'".format(attr=name)
+    value, = re.findall(pattern, read(file))
+    return value
+
+
+def readme(file):
+    """
+
+    :param file:
+    :return:
+    """
+    try:
+        return read(file)
+    except OSError as exc:
+        print(str(exc), file=sys.stderr)
+
+
+class PyTest(test):
+    def finalize_options(self):
+        """
+
+        """
+        test.finalize_options(self)
+
+    def run_tests(self):
+        """
+
+        """
+        import pytest
+        sys.exit(pytest.main(['tests']))
+
 
 setup(
-    name='Flask-TemplateSupport',
-    version=__version__,
-    url='https://github.com/cs91chris/flask_template_support',
     license='MIT',
-    author=author['name'],
-    author_email=author['email'],
+    name='Flask-TemplateSupport',
+    url='https://github.com/cs91chris/flask_template_support',
+    version=grep(VERSION_FILE, '__version__'),
+    author=grep(VERSION_FILE, '__author_name__'),
+    author_email=grep(VERSION_FILE, '__author_email__'),
     description='Template support for flask application',
-    long_description=long_description,
-    packages=['flask_template_support'],
+    long_description=readme('README.rst'),
+    packages=find_packages(),
     zip_safe=False,
     include_package_data=True,
     platforms='any',
     install_requires=[
-        'Flask==1.1.*',
-        'python-dateutil==2.8.*'
+        'Flask',
+        'python-dateutil >= 2'
     ],
     classifiers=[
         'Environment :: Web Environment',
