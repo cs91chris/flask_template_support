@@ -16,7 +16,7 @@ def or_na(item):
     return item
 
 
-def yes_or_no(item: bool):
+def yes_or_no(item):
     """
 
     :param item:
@@ -25,7 +25,7 @@ def yes_or_no(item: bool):
     return 'yes' if item else 'no'
 
 
-def reverse(s: list):
+def reverse(s):
     """
 
     :param s:

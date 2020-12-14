@@ -11,11 +11,11 @@ class TemplateSupport:
         if self._app:
             self.init_app(app, **kwargs)
 
-    def init_app(self, app, fltrs=None, functs=None):
+    def init_app(self, app, filters=None, functions=None):
         """
 
-        :param functs: function's tuple
-        :param fltrs: filter's tuple
+        :param functions: function's tuple
+        :param filters: filter's tuple
         :param app:
         """
         self._app = app
@@ -26,38 +26,39 @@ class TemplateSupport:
 
         app.config.setdefault('PRETTY_DATE', "%d %B %Y %I:%M:%S %p")
 
-        self.register_filters(DEFAULT_FILTERS + (fltrs or ()))
-        self.register_functions(DEFAULT_FUNCTIONS + (functs or ()))
+        self.register_filters({**DEFAULT_FILTERS, **filters}.values())
+        self.register_functions({**DEFAULT_FUNCTIONS, **functions}.values())
 
-    def register_functions(self, functs):
+    def register_functions(self, functions):
         """
 
-        :param functs: function's tuple
+        :param functions: function's tuple
         """
-        for f in functs:
+        for f in functions:
             if isinstance(f, tuple):
                 self._register_function(f[0], f[1])
             else:
                 self._register_function(f)
 
-    def register_filters(self, fltrs):
+    def register_filters(self, filters):
         """
 
-        :param fltrs: filter's tuple
+        :param filters: filter's tuple
         """
-        for f in fltrs:
+        for f in filters:
             if isinstance(f, tuple):
                 self._register_filter(f[0], f[1])
             else:
                 self._register_filter(f)
 
-    def _register_function(self, funct, name=None):
+    def _register_function(self, template_function, name=None):
         """
 
-        :param funct:
+        :param template_function:
         :param name:
         :return:
         """
+
         def create_callback(n, f):
             """
 
@@ -65,28 +66,30 @@ class TemplateSupport:
             :param f: function reference
             :return:
             """
+
             def callback():
                 """
 
                 :return: dict
                 """
                 return {n: f}
+
             return callback
 
-        _name = name or funct.__name__
+        _name = name or template_function.__name__
 
         self._app.template_context_processors[None].append(
-            create_callback(_name, funct)
+            create_callback(_name, template_function)
         )
         self._app.logger.debug("Registered function: '{}'".format(_name))
 
-    def _register_filter(self, fltr, name=None):
+    def _register_filter(self, template_filter, name=None):
         """
 
-        :param fltr:
+        :param template_filter:
         :param name:
         """
-        _name = name or fltr.__name__
+        _name = name or template_filter.__name__
 
-        self._app.add_template_filter(fltr, _name)
+        self._app.add_template_filter(template_filter, _name)
         self._app.logger.debug("Registered filter: '%s'", _name)
