@@ -24,6 +24,8 @@ class TemplateSupport:
             app.extensions = dict()
         app.extensions['template_support'] = self
 
+        app.config.setdefault('PRETTY_DATE', "%d %B %Y %I:%M:%S %p")
+
         self.register_filters(DEFAULT_FILTERS + (fltrs or ()))
         self.register_functions(DEFAULT_FUNCTIONS + (functs or ()))
 

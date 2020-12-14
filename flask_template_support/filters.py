@@ -1,7 +1,8 @@
 from datetime import datetime
 from operator import itemgetter
 
-from dateutil.parser import parse
+from dateutil import parser
+from flask import current_app as cap
 
 
 def or_na(item):
@@ -40,14 +41,13 @@ def pretty_date(date, fmt=None):
     :param fmt:
     :return:
     """
-    fmt = fmt or "%d %B %Y %I:%M:%S %p"
-
+    fmt = fmt or cap.config['PRETTY_DATE']
     if date:
         if isinstance(date, datetime):
             return date.strftime(fmt)
 
-        return parse(date).strftime(fmt)
-    return None
+        return parser.parse(date).strftime(fmt)
+    return ""
 
 
 # noinspection PyShadowingNames
@@ -73,13 +73,15 @@ def order_by(data, item, reverse=False, silent=True):
             raise
 
 
-def truncate(data, n, terminator=None):
+def truncate(data, n, term=None):
     """
 
     :param data: input string
     :param n: max length of string
-    :param terminator: string to append to output
+    :param term: string to append to output
     :return:
     """
-    term = terminator or '...'
+    if term is None:
+        term = '...'
+
     return "{}{}".format(data[:n], term)
