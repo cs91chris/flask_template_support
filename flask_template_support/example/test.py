@@ -1,5 +1,4 @@
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template
 
 from flask_template_support import TemplateSupport
 
@@ -15,9 +14,9 @@ def test_sub(a, b):
 app = Flask(__name__)
 ts = TemplateSupport()
 
-ts.init_app(app, functs=(
-    (test_sum, 'sum'),
-    (test_sub, 'sub'),
+ts.init_app(app, functions=dict(
+    sum=(test_sum, 'sum'),
+    sub=(test_sub, 'sub'),
 ))
 
 
