@@ -12,7 +12,7 @@ def or_na(item):
     :return:
     """
     if not item:
-        return 'n/a'
+        return cap.config['NOT_AVAILABLE_DESC']
     return item
 
 
@@ -22,7 +22,7 @@ def yes_or_no(item):
     :param item:
     :return:
     """
-    return 'yes' if item else 'no'
+    return 'yes' if bool(item) else 'no'
 
 
 def reverse(s):
@@ -50,13 +50,12 @@ def pretty_date(date, fmt=None):
     return ""
 
 
-# noinspection PyShadowingNames
-def order_by(data, item, reverse=False, silent=True):
+def order_by(data, item, descending=False, silent=True):
     """
 
     :param data: list of objects
     :param item: item of the object according to which to order
-    :param reverse: reverse order
+    :param descending: descending order
     :param silent: raise or not exception
     :return:
     """
@@ -64,7 +63,7 @@ def order_by(data, item, reverse=False, silent=True):
         return sorted(
             data,
             key=itemgetter(item),
-            reverse=reverse
+            reverse=descending
         )
     except KeyError:
         if silent:
@@ -85,3 +84,27 @@ def truncate(data, n, term=None):
         term = '...'
 
     return "{}{}".format(data[:n], term)
+
+
+def human_file_size(size, max_index=None):
+    """
+
+    :param size:
+    :param max_index:
+    :return:
+    """
+    idx = 0
+    size = int(size or 0)
+    scale = cap.config['HUMAN_FILE_SIZE_SCALE']
+    divider = cap.config['HUMAN_FILE_SIZE_DIVIDER']
+    max_index = max_index or len(scale)
+
+    if size < divider:
+        return f"{size} B"
+
+    for idx in range(0, max_index):
+        size /= divider
+        if size < divider:
+            break
+
+    return "{:.2f} {}".format(size, scale[idx])

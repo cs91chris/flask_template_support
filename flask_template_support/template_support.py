@@ -24,10 +24,23 @@ class TemplateSupport:
             app.extensions = dict()
         app.extensions['template_support'] = self
 
-        app.config.setdefault('PRETTY_DATE', "%d %B %Y %I:%M:%S %p")
+        self.set_default_config(app)
 
-        self.register_filters({**DEFAULT_FILTERS, **filters}.values())
-        self.register_functions({**DEFAULT_FUNCTIONS, **functions}.values())
+        filters = {**DEFAULT_FILTERS, **(filters or {})}
+        functions = {**DEFAULT_FUNCTIONS, **(functions or {})}
+        self.register_filters(filters.values())
+        self.register_functions(functions.values())
+
+    @staticmethod
+    def set_default_config(app):
+        """
+
+        :param app:
+        """
+        app.config.setdefault('NOT_AVAILABLE_DESC', "N/A")
+        app.config.setdefault('PRETTY_DATE', "%d %B %Y %I:%M:%S %p")
+        app.config.setdefault('HUMAN_FILE_SIZE_DIVIDER', 1000)
+        app.config.setdefault('HUMAN_FILE_SIZE_SCALE', ['KB', 'MB', 'GB', 'TB'])
 
     def register_functions(self, functions):
         """

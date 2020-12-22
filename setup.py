@@ -8,8 +8,8 @@ import os
 import re
 import sys
 
+from setuptools import find_packages, setup
 from setuptools.command.test import test
-from setuptools import setup, find_packages
 
 BASE_PATH = os.path.dirname(__file__)
 VERSION_FILE = os.path.join('flask_template_support', 'version.py')
