@@ -60,16 +60,11 @@ def order_by(data, item, descending=False, silent=True):
     :return:
     """
     try:
-        return sorted(
-            data,
-            key=itemgetter(item),
-            reverse=descending
-        )
+        return sorted(data, key=itemgetter(item), reverse=descending)
     except KeyError:
         if silent:
             return data
-        else:
-            raise
+        raise
 
 
 def truncate(data, n, term=None):

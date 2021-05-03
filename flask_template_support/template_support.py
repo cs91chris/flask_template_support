@@ -59,7 +59,7 @@ class TemplateSupport:
         :param filters: filter's tuple
         """
         for f in filters:
-            if isinstance(f, tuple):
+            if isinstance(f, (tuple, list)):
                 self._register_filter(f[0], f[1])
             else:
                 self._register_filter(f)
@@ -81,10 +81,6 @@ class TemplateSupport:
             """
 
             def callback():
-                """
-
-                :return: dict
-                """
                 return {n: f}
 
             return callback
@@ -94,7 +90,7 @@ class TemplateSupport:
         self._app.template_context_processors[None].append(
             create_callback(_name, template_function)
         )
-        self._app.logger.debug("Registered function: '{}'".format(_name))
+        self._app.logger.debug("Registered function: '%s'", _name)
 
     def _register_filter(self, template_filter, name=None):
         """
